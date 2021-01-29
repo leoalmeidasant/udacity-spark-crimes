@@ -6,7 +6,8 @@ import pyspark.sql.functions as psf
 
 
 KAFKA_BOOTSTRAP_SERVERS = 'localhost:9092'
-TOPIC = 'com.udacity.crime'
+TOPIC = 'com.udacity.sf-crimes'
+OFFSET_TRIGGER = 200
 
 
 # TODO Create a schema for incoming resources
@@ -38,7 +39,7 @@ def run_spark_job(spark):
         .option('kafka.bootstrap.servers', KAFKA_BOOTSTRAP_SERVERS) \
         .option('subscribe', TOPIC) \
         .option('startingOffsets', 'earliest') \
-        .option('maxOffsetsPerTrigger', 200) \
+        .option('maxOffsetsPerTrigger', OFFSET_TRIGGER) \
         .load()
 
     # Show schema for the incoming resources for checks
@@ -59,7 +60,7 @@ def run_spark_job(spark):
     agg_df = distinct_table.dropna().select("original_crime_type_name")\
         .groupBy("original_crime_type_name")\
         .agg( {"original_crime_type_name":"count"})\
-        .withColumnRenamed("count(original_crime_type_name)", "qty_type_crimes") \
+        .withColumnRenamed("count(original_crime_type_name)", "crimes_type_quantity") \
         .orderBy("count(original_crime_type_name)", ascending=False)
 
     # TODO Q1. Submit a screen shot of a batch ingestion of the aggregation

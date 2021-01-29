@@ -5,7 +5,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 BROKER_URL = "PLAINTEXT://localhost:9092"
-TOPIC = "com.udacity.crime"
+TOPIC = "com.udacity.sf-crimes"
 
 async def consume(topic_name):
     c = Consumer({"bootstrap.servers": BROKER_URL, "group.id": "31", 'auto.offset.reset': 'earliest'})
