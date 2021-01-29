@@ -54,7 +54,7 @@ They will change processedRowsPerSecond parameters, so the jobs will be complete
 
 
 ### Spark UI
-<img src='images/ui.png'/>
+<img src='images/spark-ui.png'/>
 
 
 ### Kafka Console Consumer
