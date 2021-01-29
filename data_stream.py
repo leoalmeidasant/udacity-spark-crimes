@@ -7,7 +7,10 @@ import pyspark.sql.functions as psf
 
 KAFKA_BOOTSTRAP_SERVERS = 'localhost:9092'
 TOPIC = 'com.udacity.sf-crimes'
-OFFSET_TRIGGER = 200
+TRIGGER_OFFSET = 200
+DEFAULT_PARALLELISM = 50
+SHUFFLE_PARTITIONS = 100
+SPARK_UI_PORT = 3000
 
 
 # TODO Create a schema for incoming resources
@@ -39,7 +42,7 @@ def run_spark_job(spark):
         .option('kafka.bootstrap.servers', KAFKA_BOOTSTRAP_SERVERS) \
         .option('subscribe', TOPIC) \
         .option('startingOffsets', 'earliest') \
-        .option('maxOffsetsPerTrigger', OFFSET_TRIGGER) \
+        .option('maxOffsetsPerTrigger', TRIGGER_OFFSET) \
         .load()
 
     # Show schema for the incoming resources for checks
@@ -97,11 +100,10 @@ if __name__ == "__main__":
    # TODO Create Spark in Standalone mode
     spark = SparkSession \
         .builder \
-        .config("spark.sql.shuffle.partitions", 3) \
-        .config("maxOffsetsPerTrigger", 200) \
-        .config("spark.default.parallelism", 50) \
-        .config("spark.sql.shuffle.partitions", 100) \
-        .config("spark.ui.port", 3000) \
+        .config("spark.sql.shuffle.partitions", SHUFFLE_PARTITIONS) \
+        .config("maxOffsetsPerTrigger", TRIGGER_OFFSET) \
+        .config("spark.default.parallelism", DEFAULT_PARALLELISM) \
+        .config("spark.ui.port", SPARK_UI_PORT) \
         .master("local[*]") \
         .appName("KafkaSparkStructuredStreaming") \
         .getOrCreate()
